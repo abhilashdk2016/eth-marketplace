@@ -2,11 +2,11 @@
 import { useWeb3 } from "@/components/providers/web3";
 import Link from "next/link";
 import Button from "./Button";
-import { useAccount } from "@/components/web3Hooks/useAccount";
+import { useAccount } from "@/components/hooks/web3/useAccount";
 
 export default function Navbar() {
-    const { connect, isWeb3Loaded, isLoading } = useWeb3();
-    const { account, isLoading: isAccountLoading } = useAccount();
+    const { connect, requireInstall, isLoading } = useWeb3();
+    const { account } = useAccount();
     return (
         <section>
             <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
@@ -22,12 +22,15 @@ export default function Navbar() {
                     { isLoading ? <Button className="bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
                         Loading...
                       </Button> :
-                      isWeb3Loaded ?  <Button className="bg-indigo-600 text-white hover:bg-indigo-700" onClick={connect}>
-                      Connect Wallet
-                    </Button> : <Button className="bg-orange-600 text-white hover:bg-orange-700" disabled={isLoading} onClick={() => {
+                      account.data ?  <Button className="bg-indigo-600 text-white hover:bg-indigo-700" onClick={connect}>
+                      {account.data.slice(0, 5) + '...' + account.data.slice(-4)}
+                    </Button> :
+                    requireInstall ? <Button className="bg-orange-600 text-white hover:bg-orange-700" disabled={isLoading} onClick={() => {
                       window.open('https://metamask.io/download', "_blank");
                     }}>
                       Install Metamask
+                    </Button> : <Button className="bg-indigo-600 text-white hover:bg-indigo-700" onClick={connect}>
+                      Connect Wallet
                     </Button>
                     }
                   </div>

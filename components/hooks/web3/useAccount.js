@@ -1,4 +1,4 @@
-import { useHooks } from "../providers/web3"
+import { useHooks } from "@/components/providers/web3";
 
 export const useAccount = () => {
     return useHooks(h => h.useAccount())();

@@ -1,9 +1,13 @@
+"use client";
 import { handler as createUseAccount } from "./useAccount";
-
-export const setupHooks = (web3) => {
+import { handler as createUseNetwork } from "./useNetwork";
+export const setupHooks = (...dep) => {
   const hooks = {
     useAccount: () => {
-        return createUseAccount(web3);
+        return createUseAccount(...dep);
+    },
+    useNetwork: () => {
+        return createUseNetwork(...dep);
     },
   };
   return hooks;
