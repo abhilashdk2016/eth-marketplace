@@ -3,6 +3,7 @@ import { useWeb3 } from "@/components/providers/web3";
 import Link from "next/link";
 import Button from "./Button";
 import { useAccount } from "@/components/hooks/web3/useAccount";
+import ActiveLink from "./ActiveLink";
 
 export default function Navbar() {
     const { connect, requireInstall, isLoading } = useWeb3();
@@ -13,12 +14,12 @@ export default function Navbar() {
               <nav className="relative" aria-label="Global">
                 <div className="flex justify-between items-center">
                   <div>
-                    <Link href="/" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Home</Link>
-                    <Link href="/marketplace" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Marketplace</Link>
-                    <Link href="/blogs" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Blogs</Link>
+                    <ActiveLink href="/" classname="font-medium mr-8 text-gray-500 hover:text-gray-900" label="Home" />
+                    <ActiveLink href="/marketplace" classname="font-medium mr-8 text-gray-500 hover:text-gray-900" label="Marketplace" />
+                    <ActiveLink href="/blogs" classname="font-medium mr-8 text-gray-500 hover:text-gray-900" label="Blogs" />
                   </div>
                   <div>
-                    <Link href="/wishlist" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Wishlist</Link>
+                    <ActiveLink href="/wishlist" classname="font-medium mr-8 text-gray-500 hover:text-gray-900" label="Wishlist" />
                     { isLoading ? <Button className="bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
                         Loading...
                       </Button> :

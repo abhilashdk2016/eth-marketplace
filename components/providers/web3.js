@@ -3,6 +3,7 @@
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
+import { loadContract } from "@/utils/loadContract";
 
 const { createContext, useEffect, useState, useContext, useMemo } = require("react");
 
@@ -20,15 +21,12 @@ function Web3Provider({ children }) {
     async function loadProvider() {
         const provider = await detectEthereumProvider();
         if (provider) {
-          // We recommend using MetaMask's provider
-          console.log("Ethereum successfully detected!");
-          // Access the decentralized web!
-          // await provider.request({ method: 'eth_requestAccounts' });
           const web3 = new Web3(provider);
+          const contract = await loadContract("CourseMarketPlaceAbhilashDK", web3);
           setweb3Api({
             provider,
             web3,
-            contract: null,
+            contract,
             isLoading: false,
             hooks: setupHooks(web3, provider)
           })

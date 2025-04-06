@@ -4,13 +4,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Button from '../common/Button';
 
-const CourseCard = ({ course, showPurchase, onClick }) => {
+const CourseCard = ({ course, showPurchase, onClick, canPurchaseCourse }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
         <div className="flex flex-col h-full">
             <div className="flex h-full">
                 <Image 
-                className="object-cover" 
+                className={`object-cover ${canPurchaseCourse && "filter grayscale"}`} 
                 src={course.coverImage}
                 width={0}
                 height={0}
@@ -27,7 +27,7 @@ const CourseCard = ({ course, showPurchase, onClick }) => {
                 <p className="mt-2 text-gray-500">{course.description.substring(0, 70)}...</p>
                 {
                     showPurchase && <div className="mt-4">
-                        <Button variant="lightPurple" onClick={() => onClick(course)}>Purchase</Button>
+                        <Button variant="lightPurple" onClick={() => onClick(course)} disabled={canPurchaseCourse}>Purchase</Button>
                     </div>
                 }
             </div>

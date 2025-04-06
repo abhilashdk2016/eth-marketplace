@@ -1,13 +1,9 @@
 'use client';
 import React from 'react';
-import { useAccount } from "@/components/hooks/web3/useAccount";
-import { useNetwork } from "@/components/hooks/web3/useNetwork";
 import { useWeb3 } from "@/components/providers/web3";
 
-const WalletBar = () => {
+const WalletBar = ({ network, account }) => {
   const { isWeb3Loaded, requireInstall } = useWeb3();
-  const { network } = useNetwork();
-  const { account } = useAccount();
   return (
     <section className="text-white bg-indigo-600 rounded-lg">
         <div className="p-8">
