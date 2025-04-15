@@ -1,18 +1,12 @@
-import Button from '@/components/ui/common/Button';
-import OwnedCourseCard from '@/components/ui/course/OwnedCourseCard';
-import MarketHeader from '@/components/ui/marketplace/MarketHeader';
 import React from 'react'
+import OwnedCoursesComponent from './OwnedCoursesComponent'
+import { GetAllCourses } from '@/actions/api';
 
-const OwnedCourses = () => {
+const OwnedCourses = async () => {
+  const { data } = await GetAllCourses();
   return (
     <>
-        <MarketHeader />
-        <section className='grid grid-cols-1'>
-            <OwnedCourseCard>
-              <Button>Watch the course</Button>
-            </OwnedCourseCard>
-        </section>
-        
+        <OwnedCoursesComponent courses={data} />
     </>
   )
 }

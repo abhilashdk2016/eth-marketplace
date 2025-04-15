@@ -26,7 +26,6 @@ export const  handler = (web3, provider) => () => {
     useEffect(() => {
         async function getChainId() {
             const chainId = await web3.eth.getChainId();
-            console.log(NETWORK[chainId] ?? "Unknown");
             setChainId(NETWORK[chainId] ?? "Unknown");
         }
 
@@ -34,12 +33,16 @@ export const  handler = (web3, provider) => () => {
     }, [web3]);
 
     useEffect(() => {
-        provider && provider.on("chainChanged", chainId => {
-            console.log(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
+        const mutator = chainId => {
             swrResponse.mutate(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
             setChainId(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
-        });
-    }, [web3]);
+        }
+        provider?.on("chainChanged", mutator);
+
+        return () => {
+            provider?.removeListener("chainChanged", mutator);
+        }
+    }, [provider]);
     return {
         network: {
             data: chainId,

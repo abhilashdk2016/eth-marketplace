@@ -15,14 +15,14 @@ export default function CourseFilter({onSearchSubmit, onFilterSelect}) {
           type="text"
           name="courseHash"
           id="courseHash"
-          className="w-52 xs:w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md md:mr-4"
+          className="mr-2 w-52 xs:w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md md:mr-4"
           placeholder="0x2341ab..." />
-        <Button
+        <Button className="p-2"
           onClick={() => onSearchSubmit(searchText)}>
           Search
         </Button>
       </div>
-      <div className="relative text-gray-700">
+      <div className="relative text-gray-700 mt-5 md:mt-0">
         <select
           onChange={({target: {value}}) => onFilterSelect(value)}
           className="w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline" placeholder="Regular input">

@@ -15,7 +15,7 @@ const ManageCourseComponent = () => {
         onSearchSubmit={() => {}}
         />
         <section className='grid grid-cols-1'>
-            <OwnedCourseCard />
+            {/* <OwnedCourseCard /> */}
         </section>
 
     </>

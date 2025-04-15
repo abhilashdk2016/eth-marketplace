@@ -10,11 +10,11 @@ const LINKS = [
   },
   {
     label: 'My Courses',
-    href: '/marketplace/courses/manage',
+    href: '/marketplace/courses/owned',
   },
   {
     label: 'Manage Courses',
-    href: '/marketplace/courses/owned',
+    href: '/marketplace/courses/manage',
   }
 ]
 

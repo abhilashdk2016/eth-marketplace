@@ -4,7 +4,7 @@ import useSWR from 'swr';
 const adminAddresses = {
   "0xe42497faae35f4f0333de3196899d91222465da98313a8139961a5c9a331f2a6": true,
 }
-export const  handler = web3 => () => {
+export const  handler = (web3, provider) => () => {
   const { data, mutate, ...swrResponse } = useSWR( () => 
     web3 ? "web3/account" : null, 
   async () => {
@@ -13,11 +13,13 @@ export const  handler = web3 => () => {
   });
 
   useEffect(() => {
-    window.ethereum && window.ethereum.on('accountsChanged', (accounts) => {
-      mutate(accounts[0] ?? null);
-    });
+    const mutator = accounts => mutate(accounts[0] ?? null);
+    provider?.on('accountsChanged', mutator);
+    return () => {
+      provider?.removeListener('accountsChanged', mutator);
+    }
   }
-  , []);
+  , [provider]);
 
   return { 
     account: {

@@ -21,13 +21,13 @@ const CourseCard = ({ course, showPurchase, onClick, canPurchaseCourse }) => {
             <div className="p-8">
                 <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{course.type}</div>
                 <Link href={`/courses/${course.slug}`}
-                className="h-12 block mt-1 text-lg leading-tight font-medium text-black hover:underline">
+                className="h-12 block mt-1 text-sm sm:text-lg leading-tight font-medium text-black hover:underline">
                     {course.title}
                 </Link>
-                <p className="mt-2 text-gray-500">{course.description.substring(0, 70)}...</p>
+                <p className="mt-2 text-gray-500 text-sm sm:text-base">{course.description.substring(0, 70)}...</p>
                 {
                     showPurchase && <div className="mt-4">
-                        <Button variant="lightPurple" onClick={() => onClick(course)} disabled={canPurchaseCourse}>Purchase</Button>
+                        <Button className='p-2' variant="lightPurple" onClick={() => onClick(course)} disabled={canPurchaseCourse}>Purchase</Button>
                     </div>
                 }
             </div>
