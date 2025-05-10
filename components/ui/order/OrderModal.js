@@ -10,26 +10,26 @@ const defaultOrderState = {
     confirmationEmail: ""
 }
 
-const createFormState = ({ price, email, confirmationEmail }, hasAgreedToTerms) => {
+const createFormState = ({ price, email, confirmationEmail }, hasAgreedToTerms, isNewPurchase) => {
     if(!price || Number(price) <=0) {
         return {
             isDisabled: true,
             message: "Price is not correct"
         }
     }
-    if(!email || email.trim().length < 5 || !email.includes("@")) {
+    if(isNewPurchase && (!email || email.trim().length < 5 || !email.includes("@"))) {
         return {
             isDisabled: true,
             message: "Email is not correct"
         }
     }
-    if(!confirmationEmail || confirmationEmail.trim().length < 5 || !confirmationEmail.includes("@")) {
+    if(isNewPurchase && (!confirmationEmail || confirmationEmail.trim().length < 5 || !confirmationEmail.includes("@"))) {
         return {
             isDisabled: true,
             message: "Confirmation email is not correct"
         }
     }
-    if(email !== confirmationEmail) {
+    if(isNewPurchase && (email !== confirmationEmail)) {
         return {
             isDisabled: true,
             message: "Emails are not the same"
@@ -47,13 +47,13 @@ const createFormState = ({ price, email, confirmationEmail }, hasAgreedToTerms) 
     }
 }
 
-const OrderModal = ({ course, onClose, onSubmit }) => {
+const OrderModal = ({ course, onClose, onSubmit, isNewPurchase }) => {
   const { eth } = useEthPrice();
   const [isOpen, setIsOpen] = useState(false);
   const [order, setOrder] = useState(defaultOrderState);
   const [ enablePrice, setEnablePrice ] = useState(false);
   const [ hasAgreedToTerms, setHasAgreedToTerms ] = useState(false);
-  const formState = createFormState(order, hasAgreedToTerms);
+  const formState = createFormState(order, hasAgreedToTerms, isNewPurchase);
   useEffect(() => {
     if(!!course) {
         setIsOpen(true);
@@ -116,7 +116,7 @@ const OrderModal = ({ course, onClose, onSubmit }) => {
                     Price will be verified at the time of the order. If the price will be lower, order can be declined (+- 2% slipage is allowed)
                     </p>
                 </div>
-                <div className="mt-2 relative rounded-md">
+                { isNewPurchase && <div className="mt-2 relative rounded-md">
                     <div className="mb-1">
                         <label className="mb-2 font-bold">Email</label>
                     </div>
@@ -136,7 +136,8 @@ const OrderModal = ({ course, onClose, onSubmit }) => {
                     It&apos;s important to fill a correct email, otherwise the order cannot be verified. We are not storing your email anywhere
                     </p>
                 </div>
-                <div className="my-2 relative rounded-md">
+                }
+                { isNewPurchase && <div className="my-2 relative rounded-md">
                     <div className="mb-1">
                         <label className="mb-2 font-bold">Repeat Email</label>
                     </div>
@@ -151,7 +152,8 @@ const OrderModal = ({ course, onClose, onSubmit }) => {
                         id="confirmationEmail"
                         className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md" placeholder="x@y.com" />
                 </div>
-                <div className="text-xs text-gray-700 flex">
+                }
+                <div className="text-xs text-gray-700 flex mt-5">
                     <label className="flex items-center mr-2">
                     <input
                         checked={hasAgreedToTerms}
@@ -161,7 +163,7 @@ const OrderModal = ({ course, onClose, onSubmit }) => {
                         type="checkbox"
                         className="form-checkbox" />
                     </label>
-                    <span>I accept Eincode &apos;terms of service&apos; and I agree that my order can be rejected in the case data provided above are not correct</span>
+                    <span>I accept &apos;terms of service&apos; and I agree that my order can be rejected in the case data provided above are not correct</span>
                 </div>
                 {
                     formState.message && (
@@ -174,10 +176,10 @@ const OrderModal = ({ course, onClose, onSubmit }) => {
             </div>
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
-            <Button onClick={() => onSubmit(order)} disabled={formState.isDisabled}>
+            <Button onClick={() => onSubmit(order)} disabled={formState.isDisabled} className='px-2 py-1'>
                 Submit
             </Button>
-            <Button onClick={closeOrderModal}
+            <Button onClick={closeOrderModal} className='px-2 py-1'
                 variant="red">
                 Cancel
             </Button>

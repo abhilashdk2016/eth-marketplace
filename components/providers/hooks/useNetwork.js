@@ -34,7 +34,8 @@ export const  handler = (web3, provider) => () => {
 
     useEffect(() => {
         const mutator = chainId => {
-            swrResponse.mutate(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
+            //swrResponse.mutate(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
+            window.location.reload();
             setChainId(NETWORK[parseInt(chainId, 16)] ?? "Unknown");
         }
         provider?.on("chainChanged", mutator);

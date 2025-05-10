@@ -5,7 +5,7 @@ export default async function Marketplace() {
   const { data } = await GetAllCourses();
   return (
     <>
-      <MarketplaceComponent data={data} />
+      <MarketplaceComponent courses={data} />
     </>
   )
 }

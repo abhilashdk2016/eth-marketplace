@@ -26,7 +26,7 @@ const OwnedCoursesComponent = ({ courses }) => {
                 ownedCourses.error && <div className='text-center'>Error: {ownedCourses.error}</div>
             }
             {
-                ownedCourses.data?.length === 0 && <div className='text-center'>
+                ownedCourses?.data?.ownedCourses?.length === 0 && <div className='text-center'>
                     You don't own any courses <br />
                     <Link href="/marketplace" className='text-blue-500 hover:text-blue-700'>
                         Go to Marketplace
@@ -41,7 +41,7 @@ const OwnedCoursesComponent = ({ courses }) => {
                 </div>
             }
             {
-                ownedCourses?.data && ownedCourses.data.map((course, index) => (
+                ownedCourses?.data?.ownedCourses && ownedCourses.data.ownedCourses.map((course, index) => (
                     <OwnedCourseCard key={index} course={course}>
                         <Button className='p-2' onClick={() => router.push(`/courses/${course.slug}`)}>
                             Watch Course

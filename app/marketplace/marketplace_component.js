@@ -7,32 +7,48 @@ import { useState } from "react";
 import MarketHeader from "@/components/ui/marketplace/MarketHeader";
 import { useWeb3 } from "@/components/providers/web3";
 
-const MarketplaceComponent = ({ data }) => {
+const MarketplaceComponent = ({ courses }) => {
   const { web3, contract } = useWeb3();
   const { network } = useNetwork();
   const { account } = useAccount();
   const [ selectedCourse, setSelectedCourse ] = useState(null);
-  const handleSelectedCourse = (course) => {
-    setSelectedCourse(course)
+  const [isNewPurchase, setIsNewPurchase] = useState(true);
+  const handleSelectedCourse = (course, isNew) => {
+    setSelectedCourse(course);
+    if(isNew === false) {
+      setIsNewPurchase(false);
+    }
   }
   const handlePurchaseCourse = async (order) => {
     if(!order) {
       return;
     }
-    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
+    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id)
     const orderHash = web3.utils.soliditySha3(
-      { t: 'bytes16', v: hexCourseId },
-      { t: 'address', v: account.data }
-    );
-    const emailHash = web3.utils.sha3(order.email);
-    const proof = web3.utils.soliditySha3(
-      { t: 'bytes32', v: emailHash },
-      { t: 'bytes32', v: orderHash }
-    );
+      { type: "bytes16", value: hexCourseId },
+      { type: "address", value: account.data }
+    )
+
+    const value = web3.utils.toWei(order.price.toString(), 'ether')
+
+    if (isNewPurchase) {
+      const emailHash = web3.utils.sha3(order.email)
+      const proof = web3.utils.soliditySha3(
+        { type: "bytes32", value: emailHash },
+        { type: "bytes32", value: orderHash }
+      )
+
+      _purchaseCourse(hexCourseId, proof, value)
+    } else {
+      _repurchaseCourse(orderHash, value)
+    }
+  }
+
+  const _purchaseCourse = async (hexCourseId, proof, value) => {
     try {
       const tx = await contract.methods.purchaseCourse(hexCourseId, proof).send({
         from: account.data,
-        value: web3.utils.toWei(order.price.toString(), 'ether')
+        value
       });
       console.log("Transaction successful:", tx);
     }
@@ -41,15 +57,34 @@ const MarketplaceComponent = ({ data }) => {
     } finally {
       setSelectedCourse(null);
     }
-    
   }
-  const canPurchaseCourse = !!(account.data && network.isSupported);
+
+  const _repurchaseCourse = async (courseHash, value) => {
+    try {
+      const result = await contract.methods.repurchaseCourse(
+        courseHash
+      ).send({from: account.data, value})
+      console.log(result)
+    } catch {
+      console.error("Purchase course: Operation has failed.")
+    }
+  }
+
+  const hasConnectedToWallet = !!(account.data && network.isSupported);
 
   return (
     <>
       <MarketHeader />
-      <CourseList courses={data} showPurchase={true} onClick={handleSelectedCourse} canPurchaseCourse={!canPurchaseCourse} />
-      {selectedCourse && <OrderModal course={selectedCourse} onClose={() => handleSelectedCourse(null)} onSubmit={handlePurchaseCourse} /> }
+      <CourseList courses={courses} showPurchase={true} handleClick={handleSelectedCourse} hasConnectedToWallet={!hasConnectedToWallet} />
+      {selectedCourse && <OrderModal 
+        course={selectedCourse} 
+        onClose={() => { 
+          handleSelectedCourse(null); 
+          setIsNewPurchase(true); 
+        }} 
+        onSubmit={handlePurchaseCourse}
+        isNewPurchase={isNewPurchase}
+      /> }
     </>
   )
 }
